@@ -29,7 +29,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        logger.error("someddddddddddddddddddddddddddddddddd");
+        //logger.error("someddddddddddddddddddddddddddddddddd");
 
         for (String path: Sources.sourcePaths) {
             Parser thread = (Parser) createThread(path);

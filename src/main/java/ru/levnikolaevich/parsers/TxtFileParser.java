@@ -1,5 +1,6 @@
 package ru.levnikolaevich.parsers;
 
+import ru.levnikolaevich.Constants;
 import ru.levnikolaevich.Main;
 
 import java.io.*;
@@ -39,7 +40,7 @@ public class TxtFileParser extends Parser {
 //            }
 
             try(BufferedReader fin = new BufferedReader(new FileReader(file))) {
-                words = Separator.separateSource(file.getName(),fin);
+                words = Separator.separateSource(file.getName(),fin, Constants.wordValidator);
             }
 
         } catch (IOException e) {

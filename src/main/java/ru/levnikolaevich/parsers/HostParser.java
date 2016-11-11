@@ -1,10 +1,14 @@
 package ru.levnikolaevich.parsers;
 
+import ru.levnikolaevich.Constants;
 import ru.levnikolaevich.Main;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by berezhnoy on 05.11.2016.
@@ -24,7 +28,7 @@ public class HostParser extends Parser {
             URL url = new URL(pathFile);
 
             try(BufferedReader fin = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                words = Separator.separateSource(url.toString(),fin);
+                words = Separator.separateSource(url.toString(),fin, Constants.wordValidator);
             }
 
         } catch (IOException e) {
