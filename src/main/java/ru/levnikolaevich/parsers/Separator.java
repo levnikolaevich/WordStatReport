@@ -1,5 +1,7 @@
 package ru.levnikolaevich.parsers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.levnikolaevich.Constants;
 import ru.levnikolaevich.Main;
 import ru.levnikolaevich.WordContainsException;
@@ -14,15 +16,7 @@ import java.util.List;
  */
 public class Separator {
 
-    public int summ(int arg1, int arg2) {
-        return arg1 + arg2;
-    }
-
-    public void doSome(int arg) throws Exception {
-        if (arg == 5)
-            throw new RuntimeException();
-    }
-
+    private static Logger logger = LoggerFactory.getLogger(Separator.class);
 
     public static List<String> separateSource(String sourceName, BufferedReader fin, String regExpress) {
         String line;
@@ -42,17 +36,19 @@ public class Separator {
                     if (Main.isInterrupted) break;
 
                     if (word.length() > 0) {
-                        System.out.println(sourceName + " - слово: " + word.toUpperCase());
+
+                        logger.info(sourceName + " - слово: " + word.toUpperCase());
                         words.add(word.trim());
+
                     }
                 }
             }
 
         } catch (IOException ex) {
-            System.out.println("IO ошибка на этапе работы Сепаратора слов");
+            logger.error("IO ошибка на этапе работы Сепаратора слов");
             Main.isInterrupted = true;
         } catch (WordContainsException ex) {
-            System.out.println(ex.getMessage());
+            logger.error(ex.getMessage());
             Main.isInterrupted = true;
         }
         return words;

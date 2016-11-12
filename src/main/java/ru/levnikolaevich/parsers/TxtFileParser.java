@@ -44,7 +44,7 @@ public class TxtFileParser extends Parser {
             }
 
         } catch (IOException e) {
-            System.out.println("ФАЙЛ: " + pathFile + " НЕ НАЙДЕН");
+            logger.error("ФАЙЛ: " + pathFile + " НЕ НАЙДЕН");
             Main.isInterrupted = true;
         }
 

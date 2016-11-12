@@ -32,7 +32,7 @@ public class HostParser extends Parser {
             }
 
         } catch (IOException e) {
-            System.out.println("Удаленый ресурс: " + pathFile + " НЕ ДОСТУПЕН");
+            logger.error("Удаленый ресурс: " + pathFile + " НЕ ДОСТУПЕН");
             Main.isInterrupted = true;
         }
 

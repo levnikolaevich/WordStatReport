@@ -28,8 +28,10 @@ public class Main {
      * @param args the input arguments
      */
     public static void main(String[] args) {
-
-        //logger.error("someddddddddddddddddddddddddddddddddd");
+        boolean flag = logger.isDebugEnabled();
+        if (logger.isDebugEnabled()) {
+            logger.debug("Debug Mode is ON");
+        }
 
         for (String path: Sources.sourcePaths) {
             Parser thread = (Parser) createThread(path);
@@ -44,7 +46,7 @@ public class Main {
         long time = System.currentTimeMillis() - timeStart;
 
         printReport();
-        System.out.println("Время работы программы: " + time + " милисекунд");
+        logger.error("Время работы программы: " + time + " милисекунд");
     }
 
     /**

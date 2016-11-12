@@ -1,5 +1,7 @@
 package ru.levnikolaevich.parsers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.levnikolaevich.Main;
 
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.Map;
  */
 public abstract class Parser extends Thread {
 
+    protected static Logger logger = LoggerFactory.getLogger(Parser.class);
     public static Map monitor = new HashMap<String, Integer>();
     protected String pathFile;
 
@@ -35,7 +38,7 @@ public abstract class Parser extends Thread {
         {
             for (String word : words) {
                 if(Main.isInterrupted){
-                    System.out.println("Прервано заполнение словаря. Поток: " + this.getName());
+                    logger.error("Прервано заполнение словаря. Поток: " + this.getName());
                     break;
                 }
 
