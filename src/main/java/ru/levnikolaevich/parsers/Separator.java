@@ -2,7 +2,6 @@ package ru.levnikolaevich.parsers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.levnikolaevich.Constants;
 import ru.levnikolaevich.Main;
 import ru.levnikolaevich.WordContainsException;
 
@@ -18,7 +17,7 @@ public class Separator {
 
     private static Logger logger = LoggerFactory.getLogger(Separator.class);
 
-    public static List<String> separateSource(String sourceName, BufferedReader fin, String regExpress) {
+    public static List<String> separateSource(String sourceName, BufferedReader fin, String validateExpress, String separateExpress) {
         String line;
         String[] wordsLine;
         List<String> words = new ArrayList<>();
@@ -26,12 +25,9 @@ public class Separator {
         try {
             while ((line = fin.readLine()) != null && !Main.isInterrupted) {
 
-                if (Validator.validate(line, regExpress)) {
-                    Main.isInterrupted = true;
-                    throw new WordContainsException("В тексте ресурса" + sourceName + " присутствуют запрещенные символы");
-                }
+                Validator.validate(line, validateExpress);
 
-                wordsLine = line.split(Constants.wordSeparator);
+                wordsLine = line.split(separateExpress);
                 for (String word : wordsLine) {
                     if (Main.isInterrupted) break;
 
@@ -48,7 +44,7 @@ public class Separator {
             logger.error("IO ошибка на этапе работы Сепаратора слов");
             Main.isInterrupted = true;
         } catch (WordContainsException ex) {
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage() + " : " + sourceName);
             Main.isInterrupted = true;
         }
         return words;

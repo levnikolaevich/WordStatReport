@@ -58,8 +58,9 @@ public abstract class Parser extends Thread {
     }
 
     /**
-     *
      * @return ArrayList String - list of words from resources
      */
-    abstract public List<String> SeparateSource();
+    protected List<String> SeparateSource() {
+        return null;
+    }
 }

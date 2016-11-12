@@ -28,7 +28,7 @@ public class HostParser extends Parser {
             URL url = new URL(pathFile);
 
             try(BufferedReader fin = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                words = Separator.separateSource(url.toString(),fin, Constants.wordValidator);
+                words = Separator.separateSource(url.toString(),fin, Constants.wordValidator, Constants.wordSeparator);
             }
 
         } catch (IOException e) {

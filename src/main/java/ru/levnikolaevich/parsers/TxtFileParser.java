@@ -24,8 +24,7 @@ public class TxtFileParser extends Parser {
      *
      * @return List of words from source
      */
-    @Override
-    public List<String> SeparateSource() {
+    protected List<String> SeparateSource() {
         List<String> words = new LinkedList<>();
 
         // TODO: 05.11.2016  Сделать конвертирование файла в UTF-8 налету
@@ -40,7 +39,7 @@ public class TxtFileParser extends Parser {
 //            }
 
             try(BufferedReader fin = new BufferedReader(new FileReader(file))) {
-                words = Separator.separateSource(file.getName(),fin, Constants.wordValidator);
+                words = Separator.separateSource(file.getName(),fin, Constants.wordValidator, Constants.wordSeparator);
             }
 
         } catch (IOException e) {

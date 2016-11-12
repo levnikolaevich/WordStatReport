@@ -1,53 +1,49 @@
 package ru.levnikolaevich.parsers;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SeparatorTest {
-    private Separator separator = new Separator();
-
-   // private static Logger log = LoggerFactory.getLogger(Separator.class);
-
-
-
-    //private Mockery context;
-
-    @BeforeClass
-    public static void beforeTest(){
-       // log.info("This is @BeforeClass method");
-    }
+    private BufferedReader bufferedReader = null;
+    private String validatePattern;
+    private String separatePattern;
 
     @Before
-    public void before(){
-      //  log.info("This is @Before method");
-        this.separator = new Separator();
-        //this.context = new JUnit4Mockery();
-    }
-
-    @Test(expected = Exception.class)
-    public void testDoSome() throws Exception {
-      //  log.info("This is testHandle method");
-        this.separator.doSome(5);
-        //assertThat();
-
+    public void setUp() {
+        bufferedReader = Mockito.mock(BufferedReader.class);
+        validatePattern = "";
+        separatePattern = "\\s*[^а-яА-Я]+\\s*";
     }
 
     @Test
-    public void testSumm() {
-        //  log.info("This is testHandle method");
-        Assert.assertEquals(this.separator.summ(5,5), 10);
-
+    public void test_separate_source_empty() throws IOException {
+        Mockito.when(bufferedReader.readLine()).thenReturn("line1: word11 word12, word13, ! word14", "line2: word21 word22, word23, ! word24", "line3: word31 word32, word33, ! word34", null);
+        List<String> result = Separator.separateSource("SourceName", bufferedReader, validatePattern, separatePattern);
+        Assert.assertEquals(new ArrayList<String>(), result);
     }
 
-    @After
-    public void after(){
-       // log.info("This is @After method");
+    @Test
+    public void test_separate_source_success() throws IOException {
+        List<String> expected = new ArrayList<String>() {{
+            add("строка");
+            add("слово");
+            add("слово");
+            add("слово");
+            add("слово");
+            add("слово");
+            add("слово");
+            add("слово");
+        }};
+
+        Mockito.when(bufferedReader.readLine()).thenReturn("строка-1: слово-11 слово-12, слово-13, ! слово-14", "line-2: слово-21 слово-22, слово-23, ! word24", null);
+        List<String> result = Separator.separateSource("SourceName", bufferedReader, validatePattern, separatePattern);
+        Assert.assertEquals(expected, result);
     }
-
-    @AfterClass
-    public static void afterTest(){
-      //  log.info("This is @AfterClass method");
-    }
-
-
-
 }

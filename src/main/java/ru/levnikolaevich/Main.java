@@ -11,21 +11,36 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by berezhnoy on 05.11.2016.
+ * Created by Бережной Лев, группа 2 on 05.11.2016.
+ *
+ * Программа предназначена для поиска числа вхождений слов в тексте (вариант 1 домашнего задания)
+ * Поддерживается обработка данных одновременно из нескольких источников
+ *
+ * Возможные источники
+ *      Ссылки на сайт
+ *      Текстовые файлы в формате UTF-8, расположенные на локальном ресурсе
+ *
+ * Ограничения
+ *      Программа будет остановлена, если:
+ *          Формат  источника не поддерживается
+ *
  */
 public class Main {
 
     /**
-     * The constant threads - all threads of application.
+     * Константы:
+     * @param threads - набор потоков
+     * @param isInterrupted - набор потоков
+     * @param logger - логгер основного потока
      */
     private static Set<Thread> threads  = new HashSet<>();
     public volatile static boolean isInterrupted  = false;
     private static Logger logger = LoggerFactory.getLogger(Main.class);
 
     /**
-     * The entry point of application.
+     * Главный метод приложения (входная точка)
      *
-     * @param args the input arguments
+     * @param args - если входящих параметров нет, то подхватываются данные из класса Sources
      */
     public static void main(String[] args) {
         boolean flag = logger.isDebugEnabled();
@@ -33,7 +48,16 @@ public class Main {
             logger.debug("Debug Mode is ON");
         }
 
-        for (String path: Sources.sourcePaths) {
+        if(args.length == 0 && Sources.sourcePaths.length > 0){
+            int i = 0;
+            args = new String[Sources.sourcePaths.length];
+            for (String path: Sources.sourcePaths) {
+                args[i] = path;
+                i++;
+            }
+        }
+
+        for (String path: args) {
             Parser thread = (Parser) createThread(path);
 
             if(isInterrupted == true) break;
@@ -50,9 +74,11 @@ public class Main {
     }
 
     /**
-     * Check type of source
+     * Проверка типа источника и создания соответствующего потока.
+     * Если формат источника не известен, идет прерывание хода исполнения программы
      *
      * @param path - path File
+     * @return Thread - поток, в котором обрабатывается источник
      */
     private static Thread createThread(String path)
     {
