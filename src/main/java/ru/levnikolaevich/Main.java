@@ -17,13 +17,14 @@ import java.util.regex.Pattern;
  * Поддерживается обработка данных одновременно из нескольких источников
  *
  * Возможные источники
- *      Ссылки на сайт
- *      Текстовые файлы в формате UTF-8, расположенные на локальном ресурсе
+ *      + Ссылки на сайт
+ *      + Текстовые файлы в формате UTF-8, расположенные на локальном ресурсе
  *
  * Ограничения
  *      Программа будет остановлена, если:
- *          Формат  источника не поддерживается
- *
+ *          + Формат  источника не поддерживается
+ *          + Встречены запрещенные символы в тексте
+ *          + Источник не доуступен
  */
 public class Main {
 
@@ -34,7 +35,6 @@ public class Main {
      * @param logger - логгер основного потока
      */
     private static Set<Thread> threads  = new HashSet<>();
-    public volatile static boolean isInterrupted  = false;
     private static Logger logger = LoggerFactory.getLogger(Main.class);
 
     /**
@@ -48,6 +48,9 @@ public class Main {
             logger.debug("Debug Mode is ON");
         }
 
+        /**
+         * Если начальных входных аргументов нет, берутся исчтоники, описанные в классе Sources
+         */
         if(args.length == 0 && Sources.sourcePaths.length > 0){
             int i = 0;
             args = new String[Sources.sourcePaths.length];
@@ -60,7 +63,7 @@ public class Main {
         for (String path: args) {
             Parser thread = (Parser) createThread(path);
 
-            if(isInterrupted == true) break;
+            if(Parser.isInterrupted == true) break;
 
             threads.add(thread);
             thread.start();
@@ -77,7 +80,7 @@ public class Main {
      * Проверка типа источника и создания соответствующего потока.
      * Если формат источника не известен, идет прерывание хода исполнения программы
      *
-     * @param path - path File
+     * @param path - путь к источнику
      * @return Thread - поток, в котором обрабатывается источник
      */
     private static Thread createThread(String path)
@@ -91,13 +94,13 @@ public class Main {
         if(path.endsWith(".txt"))
             return new TxtFileParser(path);
 
-        isInterrupted = true;
+        Parser.isInterrupted = true;
         logger.error("Формат источника не поддерживается: {}", path);
         return null;
     }
 
     /**
-     * Wait until all threads finish
+     * Метод ожиданния завершения всех потоков
      */
     private static void waitAllThreads() {
 
@@ -112,7 +115,7 @@ public class Main {
     }
 
     /**
-     * Print Report to Console
+     * Вывод итоговой информации в консоль
      */
     private static void printReport() {
         Map<String, Integer> treeMap = new TreeMap<>(Parser.monitor);

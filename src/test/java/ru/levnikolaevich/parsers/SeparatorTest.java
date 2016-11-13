@@ -20,17 +20,19 @@ public class SeparatorTest {
         bufferedReader = Mockito.mock(BufferedReader.class);
         validatePattern = "";
         separatePattern = "\\s*[^а-яА-Я]+\\s*";
+        Parser.isInterrupted = false;
     }
 
     @Test
     public void test_separate_source_empty() throws IOException {
         Mockito.when(bufferedReader.readLine()).thenReturn("line1: word11 word12, word13, ! word14", "line2: word21 word22, word23, ! word24", "line3: word31 word32, word33, ! word34", null);
-        List<String> result = Separator.separateSource("SourceName", bufferedReader, validatePattern, separatePattern);
+        List<String> result = Separator.separate("SourceName", bufferedReader, validatePattern, separatePattern);
         Assert.assertEquals(new ArrayList<String>(), result);
     }
 
     @Test
     public void test_separate_source_success() throws IOException {
+        validatePattern = "";
         List<String> expected = new ArrayList<String>() {{
             add("строка");
             add("слово");
@@ -43,7 +45,15 @@ public class SeparatorTest {
         }};
 
         Mockito.when(bufferedReader.readLine()).thenReturn("строка-1: слово-11 слово-12, слово-13, ! слово-14", "line-2: слово-21 слово-22, слово-23, ! word24", null);
-        List<String> result = Separator.separateSource("SourceName", bufferedReader, validatePattern, separatePattern);
+        List<String> result = Separator.separate("SourceName", bufferedReader, validatePattern, separatePattern);
         Assert.assertEquals(expected, result);
+    }
+
+    @Test
+    public void test_separate_source_validate() throws IOException {
+        validatePattern = "[a-zA-Z]";
+        Mockito.when(bufferedReader.readLine()).thenReturn("line1: word11 word12, word13, ! word14", "line2: word21 word22, word23, ! word24", "line3: word31 word32, word33, ! word34", null);
+        List<String> result = Separator.separate("SourceName", bufferedReader, validatePattern, separatePattern);
+        Assert.assertTrue("Не должно быть null", result != null);
     }
 }

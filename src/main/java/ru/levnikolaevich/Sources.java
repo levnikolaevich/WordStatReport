@@ -5,7 +5,8 @@ package ru.levnikolaevich;
  */
 public final class Sources {
     /**
-     * The Source paths.
+     * Список различных источников для тестов в поставке.
+     * Перед началом тестирования регулярное вырожение для валидатор лучше выставить на пустую строку.
      */
     public final static String[] sourcePaths = {
             //"src/main/resources/Война и мир. Том 4.txt",
