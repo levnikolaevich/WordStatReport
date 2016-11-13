@@ -43,21 +43,20 @@ public class Main {
      * @param args - если входящих параметров нет, то подхватываются данные из класса Sources
      */
     public static void main(String[] args) {
-        boolean flag = logger.isDebugEnabled();
-        if (logger.isDebugEnabled()) {
-            logger.debug("Debug Mode is ON");
-        }
-
         /**
-         * Если начальных входных аргументов нет, берутся исчтоники, описанные в классе Sources
+         * Если начальных входных аргументов нет, берутся исчтоники, описанные в классе Sources. Раскомментировать перед тестом.
          */
-        if(args.length == 0 && Sources.sourcePaths.length > 0){
-            int i = 0;
-            args = new String[Sources.sourcePaths.length];
-            for (String path: Sources.sourcePaths) {
-                args[i] = path;
-                i++;
-            }
+//        if(args.length == 0 && Sources.sourcePaths.length > 0){
+//            int i = 0;
+//            args = new String[Sources.sourcePaths.length];
+//            for (String path: Sources.sourcePaths) {
+//                args[i] = path;
+//                i++;
+//            }
+//        }
+
+        if(args.length == 0){
+            logger.error("Нет входных параметров");
         }
 
         for (String path: args) {
